@@ -23,7 +23,7 @@
             overflow: hidden;
         }
 
-        /* Moldura simulando a janela do CMD */
+        /* Moldura simulando o CMD */
         #cmd-window {
             width: 100vw;
             height: 100vh;
@@ -31,10 +31,9 @@
             display: flex;
             flex-direction: column;
             border: 1px solid #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        /* Barra de título do Windows CMD */
+        /* Barra de título estilo Windows */
         #cmd-header {
             background-color: #1f1f1f;
             color: #cccccc;
@@ -58,7 +57,6 @@
             height: 12px;
             background-color: #cccccc;
             display: inline-block;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
         }
 
         .cmd-controls span {
@@ -69,7 +67,7 @@
             color: #888;
         }
 
-        /* Corpo do Terminal */
+        /* Área de conteúdo do Terminal */
         #terminal {
             flex: 1;
             padding: 10px;
@@ -95,7 +93,7 @@
             caret-color: #ffffff;
         }
 
-        /* Estilo do Jumpscare (Vermelho Sangue e Centralizado) */
+        /* Estilo do Jumpscare */
         .jumpscare-mode #cmd-header {
             display: none;
         }
@@ -118,11 +116,10 @@
 
         .jumpscare-container pre {
             font-family: 'Consolas', 'Courier New', Courier, monospace;
-            font-size: 12px;
+            font-size: 11px;
             line-height: 1.1;
         }
 
-        /* Scrollbar customizada estilo retro */
         #terminal::-webkit-scrollbar {
             width: 8px;
         }
@@ -184,8 +181,6 @@
             term.scrollTop = term.scrollHeight;
             
             input.focus();
-
-            // Garante foco ao clicar no terminal
             document.body.onclick = () => input.focus();
 
             input.addEventListener('keydown', function(e) {
@@ -283,7 +278,7 @@
         // --- STAGE 04 ---
         clearScreen();
         await print("====================================================================");
-        await print("mythology");
+        await print("    mythology");
         await print("====================================================================");
         await print("");
         await print("In the beginning, before breath swept across the void, there was only one.");
@@ -348,15 +343,13 @@
         document.body.classList.add('jumpscare-mode');
         clearScreen();
         
-        // Ativa tela cheia se permitido pelo navegador
         try {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
             }
         } catch(e) {}
 
-    
-
+        const noliArt = `
                                 -#%%#:                                
                               *%%%####%+                              
                               @%%%%%%%%%                              

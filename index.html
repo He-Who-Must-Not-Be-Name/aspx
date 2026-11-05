@@ -23,7 +23,6 @@
             overflow: hidden;
         }
 
-        /* Moldura simulando o CMD */
         #cmd-window {
             width: 100vw;
             height: 100vh;
@@ -33,7 +32,6 @@
             border: 1px solid #333333;
         }
 
-        /* Barra de título estilo Windows */
         #cmd-header {
             background-color: #1f1f1f;
             color: #cccccc;
@@ -67,7 +65,6 @@
             color: #888888;
         }
 
-        /* Área de conteúdo do Terminal */
         #terminal {
             flex: 1;
             padding: 10px;
@@ -94,7 +91,6 @@
             caret-color: #ffffff;
         }
 
-        /* Estilo do Jumpscare */
         .jumpscare-mode #cmd-header {
             display: none;
         }
@@ -104,7 +100,7 @@
         }
 
         .jumpscare-container {
-            color: #ff0000;
+            color: #ffffff;
             text-align: center;
             font-weight: bold;
             display: flex;
@@ -338,7 +334,7 @@
         await print("                                The end...");
         await print("====================================================================");
         await print("");
-        await print("[!] Decryption complete. Closing connection...");
+        await print("I think you've seen too much already...");
         await wait(4);
 
         // --- JUMPSCARE TELA CHEIA & NOLI ---
@@ -351,8 +347,7 @@
             }
         } catch(e) {}
 
-        const noliArt = `[!] WARNING: CORE AXIS DEACTIVATED [!]
-
+        const noliArt = `
                                 -#%%#:                                
                               *%%%####%+                              
                               @%%%%%%%%%                              
@@ -403,7 +398,7 @@
 
         await wait(3);
         msg.style.visibility = 'visible';
-        await wait(4);
+        await wait(6);
 
         window.close();
     }

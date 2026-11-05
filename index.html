@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>See for yourself.</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0c0c0c;
+            color: #cccccc;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Moldura simulando a janela do CMD */
+        #cmd-window {
+            width: 100vw;
+            height: 100vh;
+            background-color: #0c0c0c;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        /* Barra de título do Windows CMD */
+        #cmd-header {
+            background-color: #1f1f1f;
+            color: #cccccc;
+            padding: 4px 10px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            border-bottom: 1px solid #2b2b2b;
+        }
+
+        .cmd-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cmd-icon {
+            width: 12px;
+            height: 12px;
+            background-color: #cccccc;
+            display: inline-block;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+
+        .cmd-controls span {
+            display: inline-block;
+            width: 12px;
+            text-align: center;
+            margin-left: 10px;
+            color: #888;
+        }
+
+        /* Corpo do Terminal */
+        #terminal {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.25;
+        }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 14px;
+            outline: none;
+            flex: 1;
+            caret-color: #ffffff;
+        }
+
+        /* Estilo do Jumpscare (Vermelho Sangue e Centralizado) */
+        .jumpscare-mode #cmd-header {
+            display: none;
+        }
+
+        .jumpscare-mode #cmd-window {
+            border: none;
+        }
+
+        .jumpscare-container {
+            color: #ff0000;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .jumpscare-container pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 12px;
+            line-height: 1.1;
+        }
+
+        /* Scrollbar customizada estilo retro */
+        #terminal::-webkit-scrollbar {
+            width: 8px;
+        }
+        #terminal::-webkit-scrollbar-track {
+            background: #0c0c0c;
+        }
+        #terminal::-webkit-scrollbar-thumb {
+            background: #333333;
+        }
+    </style>
+</head>
+<body>
+
+<div id="cmd-window">
+    <div id="cmd-header">
+        <div class="cmd-title">
+            <span class="cmd-icon"></span>
+            <span>Command Prompt - See for yourself.</span>
+        </div>
+        <div class="cmd-controls">
+            <span>&#8211;</span>
+            <span>&#9633;</span>
+            <span>&#10005;</span>
+        </div>
+    </div>
+    <div id="terminal"></div>
+</div>
+
+<script>
+    const term = document.getElementById('terminal');
+
+    function print(text, color = '#cccccc') {
+        return new Promise(resolve => {
+            const line = document.createElement('div');
+            line.style.color = color;
+            line.textContent = text;
+            term.appendChild(line);
+            term.scrollTop = term.scrollHeight;
+            resolve();
+        });
+    }
+
+    function clearScreen() {
+        term.innerHTML = "";
+    }
+
+    async function promptUser(question) {
+        return new Promise(resolve => {
+            const line = document.createElement('div');
+            line.className = 'input-line';
+            line.textContent = question;
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.autofocus = true;
+            
+            line.appendChild(input);
+            term.appendChild(line);
+            term.scrollTop = term.scrollHeight;
+            
+            input.focus();
+
+            // Garante foco ao clicar no terminal
+            document.body.onclick = () => input.focus();
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    let val = input.value;
+                    input.disabled = true;
+                    document.body.onclick = null;
+                    resolve(val.trim());
+                }
+            });
+        });
+    }
+
+    async function wait(seconds) {
+        return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+    }
+
+    async function startARG() {
+        // --- STAGE 01 ---
+        while (true) {
+            clearScreen();
+            await print("====================================================================");
+            await print("    stage 1");
+            await print("====================================================================");
+            await print("");
+            await print("The hint is: SUN");
+            await print("");
+
+            let senha1 = await promptUser(">> Enter Password 1: ");
+            if (senha1.toLowerCase() === "stars") {
+                await print("");
+                await print("[OK] Stage 1 bypass successful!");
+                await wait(2);
+                break;
+            } else {
+                await print("");
+                await print("ops, looks like you got it wrong. Try again if you have the patience...");
+                await wait(2);
+            }
+        }
+
+        // --- STAGE 02 ---
+        while (true) {
+            clearScreen();
+            await print("====================================================================");
+            await print("    stage 2");
+            await print("====================================================================");
+            await print("");
+            await print("Did you really think it would be that easy?");
+            await print("Let's see if you can guess this one.");
+            await print("");
+            await print("Here is a hint: chicken and sword.");
+            await print("");
+
+            let senha2 = await promptUser(">> Enter authorization key: ");
+            if (senha2.toLowerCase() === "blame_jonh") {
+                await print("");
+                await print("[OK] Key accepted! Decrypting secondary payload...");
+                await wait(2);
+                break;
+            } else {
+                await print("");
+                await print("Oops, looks like you got it wrong. Try again if you have the patience...");
+                await wait(3);
+            }
+        }
+
+        // --- STAGE 03 ---
+        while (true) {
+            clearScreen();
+            await print("====================================================================");
+            await print("    stage 3");
+            await print("====================================================================");
+            await print("");
+            await print("Now it seems you've developed a high mental capacity.");
+            await print("But your journey does not end here. Let's test your knowledge of the archives.");
+            await print("");
+            await print("Clue: Who is RSPM?");
+            await print("Hint: Maybe some Roman knows the answer...");
+            await print("");
+
+            let senha3 = await promptUser(">> Enter lore key: ");
+            if (senha3.toLowerCase() === "noli") {
+                await print("");
+                await print("[OK] Correct. Accessing forbidden scriptures...");
+                await wait(3);
+                break;
+            } else {
+                await print("");
+                await print("ops, looks like you got it wrong. Try again if you have the patience...");
+                await wait(3);
+            }
+        }
+
+        // --- STAGE 04 ---
+        clearScreen();
+        await print("====================================================================");
+        await print("    👑     YOU SHOULD NOT HAVE ACCESS TO THIS FILE — RESTRICTED     👑");
+        await print("====================================================================");
+        await print("");
+        await print("In the beginning, before breath swept across the void, there was only one.");
+        await print("He who is called the Father of All Things, whose silence weighed upon the ");
+        await print("abyss like stagnant lead. And ages of eternal boredom passed, until from ");
+        await print("the creator's hands were born the Two. The first was Light, incarnate goodness,");
+        await print("a being of crystal and purity, as fragile and manipulable as glass exposed ");
+        await print("to the wind. The second was Darkness, pure and rancid malevolence, a black ");
+        await print("poison capable of twisting any creature's mind. There was perfect balance,");
+        await print("a distorted reflection of yin and yang, where all things lived in false peace.");
+        await print("");
+        await wait(20);
+
+        await print("Yet it came to pass that the First brought the Father more pride and pleasure");
+        await print("than the night could ever achieve. Consumed by profound envy and a visceral ");
+        await print("hatred of her own essence, Darkness rose against her brother to destroy him. ");
+        await print("Seeing the betrayal, the Father grew wroth. He chained the Second within the ");
+        await print("bowels of an ancient and forgotten temple, where no sound could ever interfere. ");
+        await print("And to the First, he gave the burden of vigilance.");
+        await print("");
+        await wait(20);
+
+        await print("Then, by his third hands, the creator generated the Strange Beings, silent ");
+        await print("abominations tasked with sustaining the threads of life, chanting hymns of ");
+        await print("praise to both the being of light and the lord of gloom. And Light, beholding ");
+        await print("creation, asked the Father: \"Permit me to descend and become the flesh of man?\".");
+        await print("The Father, weighing destinies in his mind, accepted his son's plea. This said, ");
+        await print("the Father slumbered. To the Father's sleep, a mere instant passed; but to ");
+        await print("the earth, thousands of centuries of desolation transpired.");
+        await print("");
+        await wait(20);
+
+        await print("Light passed from generation to generation, forgetful of itself, until it ");
+        await print("awakened within a man. Yet in the shadows, weary of the stone throne and the ");
+        await print("temple's chains, Darkness watched. A mortal man, seduced by corrupted ");
+        await print("scriptures, raised the blasphemous cult known as The Void. And among the ");
+        await print("followers, the Son of Light -- now cloistered in a mortal vessel -- infiltrated ");
+        await print("with cunning.");
+        await print("");
+        await wait(20);
+
+        await print("Poor lamb. Little did he know that Darkness awaited him, perceiving his value ");
+        await print("far too quickly. The entity saw in him the perfect umbilical cord: a manipulable ");
+        await print("body, the living key to breach the gates of other universes, corrupt everything ");
+        await print("and everyone, and silence existence.");
+        await print("");
+        await wait(20);
+
+        await print("For thus I tell you and thus it is written: the power of darkness was never ");
+        await print("one; it was shattered by the Father into fifteen pieces. And when the 15 parts ");
+        await print("of the Crown are finally gathered in one single place... it will all be over. ");
+        await print("Nothing will remain. There is no prayer, no light, no blood that can save us.");
+        await print("");
+        await print("====================================================================");
+        await print("                                The end...");
+        await print("====================================================================");
+        await print("");
+        await print("[!] Decryption complete. Closing connection...");
+        await wait(4);
+
+        // --- JUMPSCARE TELA CHEIA & NOLI ---
+        document.body.classList.add('jumpscare-mode');
+        clearScreen();
+        
+        // Ativa tela cheia se permitido pelo navegador
+        try {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+        } catch(e) {}
+
+        const noliArt = `[!] WARNING: CORE AXIS DEACTIVATED [!]
+
+                                -#%%#:                                
+                              *%%%####%+                              
+                              @%%%%%%%%%                              
+                              @@%%%%%%%%                              
+               .     +.      .%@@%%%%%%%-       +                     
+            *% *%%   -#%%%##: %#@@@@%%@%%% :%##%%%+   %## %*          
+            %%:%%%.  %%@@%%%%:###+@@@@+#%#=%%%%%%%%  .%%%-%%          
+          ..%%%%%%%%%%#@@@@@@%%%%%%%#%%%%%%@@@@@@%%%%%%%%%%% .        
+   :#@@@@%%%%@@@%%%%%%%@@@@%#%%%###@@@@##***##%@@@@%%%#%%@@@@%%%%@@@@#:   
+        -#@@@@@@@@@@%%%%%%%%%%%%###############%%%%%%@@@@@@@#-        
+               .@@@@@%%%%%%%%%%%%%%%%%%%%#%%%%%%%%%%%%.               
+               @@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%               
+               @@@@@@@@@@@@@@@@@@%%%%%%%@@@@%%%%%%%%%%%               
+              -@@@@@@@@@@@@@@@@@@@%%%%@@@@@@@@@@%%%%%%%-              
+              *@@@@@@@@::::::%@@@%%%%%%@%.....:@@@%%%%%*              
+              @@@@@@@:::-**+++*@%%%#%%%#+=+++:...@@%%%%@              
+              @@@@@@%%%%%%%%%%%%%%%##%%########%##%%%%%%              
+              @@@@@@@%%%%%%%%%%%%%#####%###%%%%%%%%%%%%@              
+              @@@@@@@@@%%%%%%%%%%%%###%%%%%%%%%%%%%%%%%@              
+              #@@@@@@@@@@@@@@@@@@%%%%%@%%%%%%%%%%%%%%%%#              
+              =@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%@=              
+              .@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%@@.              
+               @@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%@@@               
+               :@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%@@@:               
+                %@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%@@@@%                
+                 @@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%@@@@@                 
+                  #@@@@@@@@@@%%%%%%%%%%%%%%%%%@@@@@*                  
+                    *@@@@@@@@@%%%%%%%%%%%%@@@@@@@*                    
+                      =@@@@@@@@@%%%%%%%%%@@@@@@=                      
+                         %@@@@@@@@@@@@@@@@@@%                         
+                             :+#@@@@@@#+:                             `;
+
+        const container = document.createElement('div');
+        container.className = 'jumpscare-container';
+        
+        const pre = document.createElement('pre');
+        pre.textContent = noliArt;
+        container.appendChild(pre);
+
+        const msg = document.createElement('div');
+        msg.style.marginTop = '20px';
+        msg.style.fontSize = '14px';
+        msg.textContent = 'I will contact you again very soon.';
+        msg.style.visibility = 'hidden';
+        container.appendChild(msg);
+
+        term.appendChild(container);
+
+        await wait(3);
+        msg.style.visibility = 'visible';
+        await wait(4);
+
+        window.close();
+    }
+
+    startARG();
+</script>
+
+</body>
+</html>
